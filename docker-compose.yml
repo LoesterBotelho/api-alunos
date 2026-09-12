@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  api-alunos:
+    image: loesterbotelho/api-alunos:1.0.0
+    container_name: api-alunos-container
+    ports:
+      - "8080:8080"
+    restart: unless-stopped

@@ -1,0 +1,250 @@
+{
+  "info": {
+    "_postman_id": "0532f421-c55c-4126-9048-b22842e6c073",
+    "name": "api-alunos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "2506144"
+  },
+  "item": [
+    {
+      "name": "Listar Todos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Response is a JSON array', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.be.an('array');",
+              "    pm.expect(json.length).to.be.at.least(1);",
+              "});",
+              "pm.test('Each aluno has required fields', function () {",
+              "    const json = pm.response.json();",
+              "    json.forEach(function (aluno) {",
+              "        pm.expect(aluno).to.have.property('id');",
+              "        pm.expect(aluno).to.have.property('nome');",
+              "        pm.expect(aluno).to.have.property('email');",
+              "        pm.expect(aluno).to.have.property('dataNascimento');",
+              "        pm.expect(aluno).to.have.property('media');",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["alunos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Buscar Por ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response body is JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Response has expected fields\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\");",
+              "    pm.expect(jsonData).to.have.property(\"nome\").that.is.a(\"string\");",
+              "    pm.expect(jsonData).to.have.property(\"email\").that.is.a(\"string\");",
+              "    pm.expect(jsonData).to.have.property(\"dataNascimento\");",
+              "    pm.expect(jsonData).to.have.property(\"media\").that.is.a(\"number\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/alunos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["alunos", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Response is JSON and returns generated ID\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property('id').that.is.a('number');",
+              "    pm.expect(json.nome).to.eql(\"Maria Silva\");",
+              "    pm.expect(json.email).to.eql(\"maria@empresa.com\");",
+              "});",
+              "pm.test(\"Response does not expose senha\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.not.have.property('senha');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Maria Silva\",\n    \"email\": \"maria@empresa.com\",\n    \"senha\": \"senha123\",\n    \"dataNascimento\": \"2001-05-20\",\n    \"media\": 9.25\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["alunos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Atualizar Aluno (PUT)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response updates successfully\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.id).to.eql(2);",
+              "    pm.expect(jsonData.nome).to.eql(\"Henrique Silva xxx\");",
+              "    pm.expect(jsonData.email).to.eql(\"henrique@empresa.com\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Henrique Silva xxx\",\n    \"email\": \"henrique@empresa.com\",\n    \"senha\": \"qualquer\",\n    \"dataNascimento\": \"2000-09-11\",\n    \"media\": 9.5\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos/2",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["alunos", "2"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Alterar Senha (PATCH)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 204', function () {",
+              "    pm.response.to.have.status(204);",
+              "});",
+              "pm.test('Response body is empty', function () {",
+              "    pm.expect(pm.response.text()).to.be.empty;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"novaSenha\": \"NovaSenha@2026\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos/2/senha",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["alunos", "2", "senha"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Deletar Aluno (DELETE)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 204', function () {",
+              "pm.response.to.have.status(204);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/alunos/3",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["alunos", "3"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
