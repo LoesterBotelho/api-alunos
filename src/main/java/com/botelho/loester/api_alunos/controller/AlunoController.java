@@ -20,6 +20,8 @@ import com.botelho.loester.api_alunos.dto.request.AlunoRequest;
 import com.botelho.loester.api_alunos.dto.response.AlunoResponse;
 import com.botelho.loester.api_alunos.service.AlunoService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/alunos")
 public class AlunoController {
@@ -37,13 +39,13 @@ public class AlunoController {
 	}	
 	
 	@GetMapping("/{id}")
-	public AlunoResponse listar(@PathVariable Integer id) {
-		return alunoService.listar(id);
+	public AlunoResponse obterPorId(@PathVariable Integer id) {
+		return alunoService.obterPorId(id);
 	}		
 	
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AlunoResponse incluir(@RequestBody AlunoRequest request) {
+    public AlunoResponse incluir(@Valid @RequestBody AlunoRequest request) {
         return alunoService.incluir(request);
     }
 

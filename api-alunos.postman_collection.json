@@ -1,9 +1,10 @@
 {
   "info": {
-    "_postman_id": "0532f421-c55c-4126-9048-b22842e6c073",
+    "_postman_id": "5431cd28-5818-4474-a3ea-a5a3327f7e80",
     "name": "api-alunos",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "2506144"
+    "_exporter_id": "2506144",
+    "_collection_link": "https://go.postman.co/collection/2506144-5431cd28-5818-4474-a3ea-a5a3327f7e80?source=collection_link"
   },
   "item": [
     {
@@ -42,9 +43,13 @@
         "url": {
           "raw": "http://localhost:8080/alunos",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "8080",
-          "path": ["alunos"]
+          "path": [
+            "alunos"
+          ]
         }
       },
       "response": []
@@ -81,34 +86,27 @@
         "url": {
           "raw": "http://localhost:8080/alunos/1",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "8080",
-          "path": ["alunos", "1"]
+          "path": [
+            "alunos",
+            "1"
+          ]
         }
       },
       "response": []
     },
     {
-      "name": "Criar Aluno (POST)",
+      "name": "Criar Aluno (POST) - Validação Sem Nome",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 201\", function () {",
-              "    pm.response.to.have.status(201);",
-              "});",
-              "pm.test(\"Response is JSON and returns generated ID\", function () {",
-              "    const json = pm.response.json();",
-              "    pm.expect(json).to.have.property('id').that.is.a('number');",
-              "    pm.expect(json.nome).to.eql(\"Maria Silva\");",
-              "    pm.expect(json.email).to.eql(\"maria@empresa.com\");",
-              "});",
-              "pm.test(\"Response does not expose senha\", function () {",
-              "    const json = pm.response.json();",
-              "    pm.expect(json).to.not.have.property('senha');",
-              "});"
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
             ]
           }
         }
@@ -123,14 +121,23 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"nome\": \"Maria Silva\",\n    \"email\": \"maria@empresa.com\",\n    \"senha\": \"senha123\",\n    \"dataNascimento\": \"2001-05-20\",\n    \"media\": 9.25\n}"
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
         },
         "url": {
           "raw": "http://localhost:8080/alunos",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "8080",
-          "path": ["alunos"]
+          "path": [
+            "alunos"
+          ]
         }
       },
       "response": []
@@ -171,9 +178,14 @@
         "url": {
           "raw": "http://localhost:8080/alunos/2",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "8080",
-          "path": ["alunos", "2"]
+          "path": [
+            "alunos",
+            "2"
+          ]
         }
       },
       "response": []
@@ -211,9 +223,15 @@
         "url": {
           "raw": "http://localhost:8080/alunos/2/senha",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "8080",
-          "path": ["alunos", "2", "senha"]
+          "path": [
+            "alunos",
+            "2",
+            "senha"
+          ]
         }
       },
       "response": []
@@ -239,9 +257,718 @@
         "url": {
           "raw": "http://localhost:8080/alunos/3",
           "protocol": "http",
-          "host": ["localhost"],
+          "host": [
+            "localhost"
+          ],
           "port": "8080",
-          "path": ["alunos", "3"]
+          "path": [
+            "alunos",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Teste com espaços",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Nome com mais de 50 caracteres",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"   \",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação E-mail obrigatório",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho Este é um nome com mais de cinquenta caracteres\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação E-mail inválido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}   ",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação E-mail inválido2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"email-invalido\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Senha com espaços",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Data de nascimento obrigatória",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"   \",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Data deve estar no passado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": null,\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Outro teste: data de hoje",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"2030-01-01\",\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Média obrigatória",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"2026-09-14\",\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Média menor que zero",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Média exatamente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": -1.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Média maior que 10",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 0.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Validação Média exatamente 10",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 11.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Teste várias validações ao mesmo tempo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Aluno (POST) - Teste várias validações ao mesmo tempo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"\",\n    \"email\": \"email-invalido\",\n    \"senha\": \"\",\n    \"dataNascimento\": \"2030-01-01\",\n    \"media\": 15.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/alunos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "alunos"
+          ]
         }
       },
       "response": []
