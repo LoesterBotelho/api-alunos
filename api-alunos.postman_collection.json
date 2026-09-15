@@ -2,60 +2,37 @@
   "info": {
     "_postman_id": "5431cd28-5818-4474-a3ea-a5a3327f7e80",
     "name": "api-alunos",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "2506144",
-    "_collection_link": "https://go.postman.co/collection/2506144-5431cd28-5818-4474-a3ea-a5a3327f7e80?source=collection_link"
+    "description": "Collection completa para testes da API REST de Alunos com Spring Boot, Bean Validation, MapStruct, JUnit e Mockito.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "alunoId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
   "item": [
     {
-      "name": "Listar Todos",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('Status code is 200', function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "pm.test('Response is a JSON array', function () {",
-              "    const json = pm.response.json();",
-              "    pm.expect(json).to.be.an('array');",
-              "    pm.expect(json.length).to.be.at.least(1);",
-              "});",
-              "pm.test('Each aluno has required fields', function () {",
-              "    const json = pm.response.json();",
-              "    json.forEach(function (aluno) {",
-              "        pm.expect(aluno).to.have.property('id');",
-              "        pm.expect(aluno).to.have.property('nome');",
-              "        pm.expect(aluno).to.have.property('email');",
-              "        pm.expect(aluno).to.have.property('dataNascimento');",
-              "        pm.expect(aluno).to.have.property('media');",
-              "    });",
-              "});"
-            ]
-          }
-        }
-      ],
+      "name": "01 - GET - Listar todos",
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/alunos",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "8080",
           "path": [
             "alunos"
           ]
         }
       },
-      "response": []
-    },
-    {
-      "name": "Buscar Por ID",
       "event": [
         {
           "listen": "test",
@@ -65,52 +42,114 @@
               "pm.test(\"Status code is 200\", function () {",
               "    pm.response.to.have.status(200);",
               "});",
-              "pm.test(\"Response body is JSON\", function () {",
+              "",
+              "pm.test(\"Response is JSON\", function () {",
               "    pm.response.to.be.json;",
               "});",
-              "pm.test(\"Response has expected fields\", function () {",
-              "    const jsonData = pm.response.json();",
-              "    pm.expect(jsonData).to.have.property(\"id\").that.is.a(\"number\");",
-              "    pm.expect(jsonData).to.have.property(\"nome\").that.is.a(\"string\");",
-              "    pm.expect(jsonData).to.have.property(\"email\").that.is.a(\"string\");",
-              "    pm.expect(jsonData).to.have.property(\"dataNascimento\");",
-              "    pm.expect(jsonData).to.have.property(\"media\").that.is.a(\"number\");",
+              "",
+              "pm.test(\"Response is an array\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.be.an(\"array\");",
+              "});",
+              "",
+              "pm.test(\"Response contains students\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json.length).to.be.greaterThan(0);",
               "});"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "02 - GET - Buscar aluno por ID",
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/alunos/1",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/alunos/{{alunoId}}",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "8080",
           "path": [
             "alunos",
-            "1"
+            "{{alunoId}}"
           ]
         }
       },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Sem Nome",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"Response contains expected fields\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property(\"id\");",
+              "    pm.expect(json).to.have.property(\"nome\");",
+              "    pm.expect(json).to.have.property(\"email\");",
+              "    pm.expect(json).to.have.property(\"dataNascimento\");",
+              "    pm.expect(json).to.have.property(\"media\");",
+              "});",
+              "",
+              "pm.test(\"Password is not exposed\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.not.have.property(\"senha\");",
+              "});"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "03 - GET - Aluno inexistente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/alunos/999999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "alunos",
+            "999999"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test(\"Response is JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"Error contains expected message\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json.mensagem).to.include(\"Aluno não encontrado\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - POST - Incluir aluno válido",
       "request": {
         "method": "POST",
         "header": [
@@ -121,48 +160,63 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "text"
-            }
-          }
+          "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Aluno cadastrado para testes.\",\n  \"ativo\": true\n}"
         },
         "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/alunos",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "8080",
           "path": [
             "alunos"
           ]
         }
       },
-      "response": []
-    },
-    {
-      "name": "Atualizar Aluno (PUT)",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 200\", function () {",
-              "    pm.response.to.have.status(200);",
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
               "});",
-              "pm.test(\"Response updates successfully\", function () {",
-              "    var jsonData = pm.response.json();",
-              "    pm.expect(jsonData.id).to.eql(2);",
-              "    pm.expect(jsonData.nome).to.eql(\"Henrique Silva xxx\");",
-              "    pm.expect(jsonData.email).to.eql(\"henrique@empresa.com\");",
-              "});"
+              "",
+              "pm.test(\"Response is JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"Response has generated ID\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property(\"id\");",
+              "    pm.expect(json.id).to.be.a(\"number\");",
+              "});",
+              "",
+              "pm.test(\"Response contains expected fields\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property(\"id\");",
+              "    pm.expect(json).to.have.property(\"nome\");",
+              "    pm.expect(json).to.have.property(\"email\");",
+              "    pm.expect(json).to.have.property(\"dataNascimento\");",
+              "    pm.expect(json).to.have.property(\"media\");",
+              "});",
+              "",
+              "pm.test(\"Password is not exposed\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.not.have.property(\"senha\");",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "if (json.id) {",
+              "    pm.collectionVariables.set(\"alunoId\", json.id);",
+              "}"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "05 - PUT - Atualizar aluno",
       "request": {
         "method": "PUT",
         "header": [
@@ -173,41 +227,59 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"nome\": \"Henrique Silva xxx\",\n    \"email\": \"henrique@empresa.com\",\n    \"senha\": \"qualquer\",\n    \"dataNascimento\": \"2000-09-11\",\n    \"media\": 9.5\n}"
+          "raw": "{\n  \"nome\": \"Maria Silva Atualizada\",\n  \"email\": \"maria.atualizada@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 10.0,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 98888-8888\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 66.0,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2029-12-20\",\n  \"site\": \"https://www.exemplo.com/atualizado\",\n  \"observacao\": \"Aluno atualizado pelo PUT.\",\n  \"ativo\": true\n}"
         },
         "url": {
-          "raw": "http://localhost:8080/alunos/2",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/alunos/{{alunoId}}",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "8080",
           "path": [
             "alunos",
-            "2"
+            "{{alunoId}}"
           ]
         }
       },
-      "response": []
-    },
-    {
-      "name": "Alterar Senha (PATCH)",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('Status code is 204', function () {",
-              "    pm.response.to.have.status(204);",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
               "});",
-              "pm.test('Response body is empty', function () {",
-              "    pm.expect(pm.response.text()).to.be.empty;",
+              "",
+              "pm.test(\"Response is JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test(\"Updated name is returned\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json.nome).to.eql(\"Maria Silva Atualizada\");",
+              "});",
+              "",
+              "pm.test(\"Updated email is returned\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json.email).to.eql(\"maria.atualizada@empresa.com\");",
+              "});",
+              "",
+              "pm.test(\"Updated media is returned\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json.media).to.eql(10.0);",
+              "});",
+              "",
+              "pm.test(\"Password is not exposed\", function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.not.have.property(\"senha\");",
               "});"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "06 - PATCH - Alterar senha",
       "request": {
         "method": "PATCH",
         "header": [
@@ -218,760 +290,727 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"novaSenha\": \"NovaSenha@2026\"\n}"
+          "raw": "{\n  \"novaSenha\": \"NovaSenha@123\"\n}"
         },
         "url": {
-          "raw": "http://localhost:8080/alunos/2/senha",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/alunos/{{alunoId}}/senha",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "8080",
           "path": [
             "alunos",
-            "2",
+            "{{alunoId}}",
             "senha"
           ]
         }
       },
-      "response": []
-    },
-    {
-      "name": "Deletar Aluno (DELETE)",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('Status code is 204', function () {",
-              "pm.response.to.have.status(204);",
+              "pm.test(\"Status code is 204\", function () {",
+              "    pm.response.to.have.status(204);",
+              "});",
+              "",
+              "pm.test(\"Response body is empty\", function () {",
+              "    pm.expect(pm.response.text()).to.eql(\"\");",
               "});"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "07 - DELETE - Excluir aluno",
       "request": {
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/alunos/3",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/alunos/{{alunoId}}",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "8080",
           "path": [
             "alunos",
-            "3"
+            "{{alunoId}}"
           ]
         }
       },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Teste com espaços",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+              "pm.test(\"Status code is 204\", function () {",
+              "    pm.response.to.have.status(204);",
+              "});",
+              "",
+              "pm.test(\"Response body is empty\", function () {",
+              "    pm.expect(pm.response.text()).to.eql(\"\");",
+              "});"
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      "name": "08 - DELETE - Aluno inexistente",
       "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "text"
-            }
-          }
-        },
+        "method": "DELETE",
+        "header": [],
         "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
+          "raw": "{{baseUrl}}/alunos/999999",
           "host": [
-            "localhost"
+            "{{baseUrl}}"
           ],
-          "port": "8080",
           "path": [
-            "alunos"
+            "alunos",
+            "999999"
           ]
         }
       },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Nome com mais de 50 caracteres",
       "event": [
         {
           "listen": "test",
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
+              "pm.test(\"Status code is 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test(\"Response is JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});"
             ]
           }
         }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"   \",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "text"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Criar Aluno (POST) - Validação E-mail obrigatório",
-      "event": [
+      "name": "VALIDAÇÕES POST",
+      "item": [
         {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho Este é um nome com mais de cinquenta caracteres\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "text"
+          "name": "09 - Nome vazio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Validation refers to nome\", function () { pm.expect(pm.response.json().mensagem).to.include(\"nome\"); });"
+                ]
+              }
             }
-          }
+          ]
         },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
+        {
+          "name": "10 - Nome somente espaços",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"   \",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "11 - Nome maior que 50 caracteres",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"ABCDEFGHIJKLMNOPQRSTUVWXYZ ABCDEFGHIJKLMNOPQRSTUVWXYZ\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "12 - E-mail vazio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "13 - E-mail inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"email-invalido\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "14 - Senha inválida",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "15 - Data de nascimento nula",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": null,\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "16 - Data de nascimento futura",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"2030-01-01\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "17 - Média nula",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": null,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "18 - Média menor que zero",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": -1,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "19 - Média maior que 10",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 11,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "20 - CPF inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"12345678909\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "21 - Telefone inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"47999999999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "22 - CEP inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "23 - Idade maior que 120",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 121,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "24 - Altura menor que 0.50",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 0.40,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "25 - Peso maior que 500",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 501,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "26 - Dependentes maior que 20",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 21,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "27 - Data de matrícula futura",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2030-01-01\",\n  \"dataConclusao\": \"2031-01-01\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "28 - Data de conclusão passada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2020-01-01\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "29 - Site inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "30 - Ativo nulo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": null\n}"
+            },
+            "url": "{{baseUrl}}/alunos"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
           ]
         }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação E-mail inválido",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}   ",
-          "options": {
-            "raw": {
-              "language": "text"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação E-mail inválido2",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"email-invalido\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Senha com espaços",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Data de nascimento obrigatória",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"   \",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Data deve estar no passado",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": null,\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Outro teste: data de hoje",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"2030-01-01\",\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Média obrigatória",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"2026-09-14\",\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Média menor que zero",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": null\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Média exatamente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": -1.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Média maior que 10",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 0.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Validação Média exatamente 10",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 11.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Teste várias validações ao mesmo tempo",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"Loester Botelho\",\n    \"email\": \"loester@email.com\",\n    \"senha\": \"Senha123\",\n    \"dataNascimento\": \"1990-09-11\",\n    \"media\": 10.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Criar Aluno (POST) - Teste várias validações ao mesmo tempo",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\npm.test(\"Response is JSON and returns generated ID\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('id').that.is.a('number');\n    pm.expect(json.nome).to.eql(\"Maria Silva\");\n    pm.expect(json.email).to.eql(\"maria@empresa.com\");\n});\npm.test(\"Response does not expose senha\", function () {\n    const json = pm.response.json();\n    pm.expect(json).to.not.have.property('senha');\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n    \"nome\": \"\",\n    \"email\": \"email-invalido\",\n    \"senha\": \"\",\n    \"dataNascimento\": \"2030-01-01\",\n    \"media\": 15.0\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/alunos",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "alunos"
-          ]
-        }
-      },
-      "response": []
+      ]
     }
   ]
 }

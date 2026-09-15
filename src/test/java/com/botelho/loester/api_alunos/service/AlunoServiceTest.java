@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,10 +30,6 @@ class AlunoServiceTest {
 
     private AlunoMapper alunoMapper;
 
-    // ============================================================
-    // CONFIGURAÇÃO
-    // ============================================================
-
     @BeforeEach
     void setUp() {
 
@@ -43,10 +39,6 @@ class AlunoServiceTest {
 
         configurarMapper();
     }
-
-    // ============================================================
-    // CONFIGURAÇÃO DO MOCK DO MAPPER
-    // ============================================================
 
     private void configurarMapper() {
 
@@ -86,8 +78,7 @@ class AlunoServiceTest {
         when(alunoMapper.toResponse(any(Aluno.class)))
                 .thenAnswer(invocation -> {
 
-                    Aluno aluno =
-                            invocation.getArgument(0);
+                    Aluno aluno = invocation.getArgument(0);
 
                     return new AlunoResponse(
                             aluno.getId(),
@@ -99,9 +90,28 @@ class AlunoServiceTest {
                 });
     }
 
-    // ============================================================
-    // LISTAGEM
-    // ============================================================
+    private AlunoRequest alunoRequestValido() {
+
+        return new AlunoRequest(
+                "Carlos Silva",
+                "carlos.silva@empresa.com",
+                "SenhaSegura@123",
+                LocalDate.of(1995, 5, 20),
+                9.5,
+                "123.456.789-09",
+                "(47) 99999-9999",
+                "89120-000",
+                30,
+                1.75,
+                80.50,
+                2,
+                LocalDate.now(),
+                LocalDate.now().plusYears(2),
+                "https://www.exemplo.com",
+                "Aluno cadastrado para testes.",
+                true
+        );
+    }
 
     @Test
     @DisplayName("Deve listar todos os alunos cadastrados inicialmente")
@@ -123,10 +133,6 @@ class AlunoServiceTest {
         );
     }
 
-    // ============================================================
-    // BUSCAR POR ID
-    // ============================================================
-
     @Test
     @DisplayName("Deve retornar o aluno correspondente ao ID informado")
     void deveListarAlunoPorId() {
@@ -147,10 +153,6 @@ class AlunoServiceTest {
         );
     }
 
-    // ============================================================
-    // ALUNO NÃO ENCONTRADO
-    // ============================================================
-
     @Test
     @DisplayName("Deve lançar exceção quando o ID do aluno não for encontrado")
     void deveLancarExcecaoQuandoAlunoNaoEncontradoPorId() {
@@ -169,21 +171,11 @@ class AlunoServiceTest {
         );
     }
 
-    // ============================================================
-    // INCLUSÃO
-    // ============================================================
-
     @Test
     @DisplayName("Deve incluir um novo aluno com sucesso e incrementar o ID")
     void deveIncluirNovoAluno() {
 
-        AlunoRequest request = new AlunoRequest(
-                "Carlos Silva",
-                "carlos.silva@empresa.com",
-                "SenhaSegura@123",
-                LocalDate.of(1995, 5, 20),
-                9.5
-        );
+        AlunoRequest request = alunoRequestValido();
 
         AlunoResponse response =
                 alunoService.incluir(request);
@@ -216,10 +208,6 @@ class AlunoServiceTest {
         );
     }
 
-    // ============================================================
-    // ATUALIZAÇÃO
-    // ============================================================
-
     @Test
     @DisplayName("Deve atualizar os dados do aluno com sucesso")
     void deveAtualizarAluno() {
@@ -229,7 +217,19 @@ class AlunoServiceTest {
                 "loester.novo@empresa.com",
                 "IgnoradaNoUpdate",
                 LocalDate.of(1990, 9, 11),
-                10.0
+                10.0,
+                "123.456.789-09",
+                "(47) 99999-9999",
+                "89120-000",
+                35,
+                1.75,
+                80.50,
+                2,
+                LocalDate.now(),
+                LocalDate.now().plusYears(2),
+                "https://www.loester.com",
+                "Aluno atualizado.",
+                true
         );
 
         AlunoResponse response =
@@ -266,10 +266,6 @@ class AlunoServiceTest {
         );
     }
 
-    // ============================================================
-    // ALTERAÇÃO DE SENHA
-    // ============================================================
-
     @Test
     @DisplayName("Deve alterar a senha do aluno com sucesso")
     void deveAlterarSenha() {
@@ -287,21 +283,11 @@ class AlunoServiceTest {
         );
     }
 
-    // ============================================================
-    // ATUALIZAÇÃO DE ALUNO INEXISTENTE
-    // ============================================================
-
     @Test
     @DisplayName("Deve lançar exceção ao tentar atualizar aluno inexistente")
     void deveLancarExcecaoAoAtualizarAlunoInexistente() {
 
-        AlunoRequest request = new AlunoRequest(
-                "Teste",
-                "teste@teste.com",
-                "123",
-                LocalDate.now(),
-                5.0
-        );
+        AlunoRequest request = alunoRequestValido();
 
         assertThrows(
                 RegistroNaoEncontradoException.class,
@@ -311,10 +297,6 @@ class AlunoServiceTest {
                 )
         );
     }
-
-    // ============================================================
-    // EXCLUSÃO
-    // ============================================================
 
     @Test
     @DisplayName("Deve deletar o aluno com sucesso quando o ID existir")
@@ -328,10 +310,6 @@ class AlunoServiceTest {
         );
     }
 
-    // ============================================================
-    // EXCLUSÃO DE ALUNO INEXISTENTE
-    // ============================================================
-
     @Test
     @DisplayName("Deve lançar exceção ao tentar deletar aluno inexistente")
     void deveLancarExcecaoAoDeletarAlunoInexistente() {
@@ -339,6 +317,78 @@ class AlunoServiceTest {
         assertThrows(
                 RegistroNaoEncontradoException.class,
                 () -> alunoService.deletar(99)
+        );
+    }
+
+    @Test
+    @DisplayName("Deve incluir aluno com todos os novos campos")
+    void deveIncluirAlunoComTodosOsCampos() {
+
+        AlunoRequest request = alunoRequestValido();
+
+        AlunoResponse response =
+                alunoService.incluir(request);
+
+        assertNotNull(response);
+
+        assertEquals(
+                4,
+                response.id()
+        );
+
+        assertEquals(
+                "Carlos Silva",
+                response.nome()
+        );
+
+        assertEquals(
+                "carlos.silva@empresa.com",
+                response.email()
+        );
+
+        assertEquals(
+                9.5,
+                response.media()
+        );
+    }
+
+    @Test
+    @DisplayName("Deve atualizar todos os novos campos do aluno")
+    void deveAtualizarTodosOsCamposDoAluno() {
+
+        AlunoRequest request = alunoRequestValido();
+
+        AlunoResponse response =
+                alunoService.atualizar(
+                        1,
+                        request
+                );
+
+        assertNotNull(response);
+
+        assertEquals(
+                1,
+                response.id()
+        );
+
+        assertEquals(
+                "Carlos Silva",
+                response.nome()
+        );
+
+        assertEquals(
+                "carlos.silva@empresa.com",
+                response.email()
+        );
+
+        assertEquals(
+                LocalDate.of(1995, 5, 20),
+                response.dataNascimento()
+        );
+
+        assertEquals(
+                9.5,
+                response.media()
         );
     }
 }

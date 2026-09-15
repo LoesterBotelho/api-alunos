@@ -52,6 +52,7 @@ public class AlunoController {
     @PutMapping("/{id}")
     public AlunoResponse atualizar(
             @PathVariable Integer id,
+            @Valid
             @RequestBody AlunoRequest request) {
 
         return alunoService.atualizar(id, request);
