@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.botelho.loester.api_alunos.dto.request.AlteraSenhaRequest;
 import com.botelho.loester.api_alunos.dto.request.AlunoRequest;
 import com.botelho.loester.api_alunos.dto.response.AlunoResponse;
+import com.botelho.loester.api_alunos.exception.EmailJaCadastradoException;
 import com.botelho.loester.api_alunos.exception.RegistroNaoEncontradoException;
 import com.botelho.loester.api_alunos.mapper.AlunoMapper;
 import com.botelho.loester.api_alunos.model.Aluno;
@@ -17,9 +18,11 @@ import com.botelho.loester.api_alunos.model.Aluno;
 public class AlunoService {
 
     private final AlunoMapper mapper;
+
     private final List<Aluno> lista = new ArrayList<>();
 
     public AlunoService(AlunoMapper mapper) {
+
         this.mapper = mapper;
 
         Aluno aluno1 = new Aluno(
@@ -91,6 +94,7 @@ public class AlunoService {
     }
 
     public List<AlunoResponse> listarTodos() {
+
         return mapper.toResponseList(lista);
     }
 
@@ -108,6 +112,8 @@ public class AlunoService {
     }
 
     public AlunoResponse incluir(AlunoRequest request) {
+
+        validarEmailParaInclusao(request.email());
 
         Integer novoId = lista.stream()
                 .mapToInt(Aluno::getId)
@@ -140,35 +146,11 @@ public class AlunoService {
         return mapper.toResponse(aluno);
     }
 
-    private Aluno buscarAluno(Integer id) {
-
-        return lista.stream()
-                .filter(aluno -> aluno.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() ->
-                        new RegistroNaoEncontradoException(
-                                "Aluno não encontrado. Id: " + id
-                        )
-                );
-    }
-
-    public void deletar(Integer id) {
-
-        Aluno aluno = buscarAluno(id);
-
-        lista.remove(aluno);
-    }
-
-    public void alterarSenha(Integer id, AlteraSenhaRequest request) {
-
-        Aluno aluno = buscarAluno(id);
-
-        aluno.setSenha(request.novaSenha());
-    }
-
     public AlunoResponse atualizar(Integer id, AlunoRequest request) {
 
         Aluno aluno = buscarAluno(id);
+
+        validarEmailParaAtualizacao(request.email(), id);
 
         aluno.setNome(request.nome());
         aluno.setEmail(request.email());
@@ -188,5 +170,64 @@ public class AlunoService {
         aluno.setAtivo(request.ativo());
 
         return mapper.toResponse(aluno);
+    }
+
+    public void deletar(Integer id) {
+
+        Aluno aluno = buscarAluno(id);
+
+        lista.remove(aluno);
+    }
+
+    public void alterarSenha(Integer id, AlteraSenhaRequest request) {
+
+        Aluno aluno = buscarAluno(id);
+
+        aluno.setSenha(request.novaSenha());
+    }
+
+    private Aluno buscarAluno(Integer id) {
+
+        return lista.stream()
+                .filter(aluno -> aluno.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() ->
+                        new RegistroNaoEncontradoException(
+                                "Aluno não encontrado. Id: " + id
+                        )
+                );
+    }
+
+    private void validarEmailParaInclusao(String email) {
+
+        boolean emailExiste = lista.stream()
+                .anyMatch(aluno ->
+                        aluno.getEmail().equalsIgnoreCase(email)
+                );
+
+        if (emailExiste) {
+
+            throw new EmailJaCadastradoException(
+                    "E-mail já cadastrado: " + email
+            );
+        }
+    }
+
+    private void validarEmailParaAtualizacao(
+            String email,
+            Integer idAluno) {
+
+        boolean emailExiste = lista.stream()
+                .anyMatch(aluno ->
+                        aluno.getEmail().equalsIgnoreCase(email)
+                        && !aluno.getId().equals(idAluno)
+                );
+
+        if (emailExiste) {
+
+            throw new EmailJaCadastradoException(
+                    "E-mail já cadastrado para outro aluno: " + email
+            );
+        }
     }
 }

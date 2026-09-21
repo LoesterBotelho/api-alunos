@@ -13,9 +13,9 @@ import com.botelho.loester.api_alunos.dto.response.ErroResponse;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // ============================================================
+    // ------------------------------------------------------------
     // REGISTRO NÃO ENCONTRADO - 404
-    // ============================================================
+    // ------------------------------------------------------------
 
     @ExceptionHandler(RegistroNaoEncontradoException.class)
     public ResponseEntity<ErroResponse> tratarRegistroNaoEncontrado(
@@ -33,9 +33,29 @@ public class GlobalExceptionHandler {
                 .body(erro);
     }
 
-    // ============================================================
+    // ------------------------------------------------------------
+    // E-MAIL JÁ CADASTRADO - 409
+    // ------------------------------------------------------------
+
+    @ExceptionHandler(EmailJaCadastradoException.class)
+    public ResponseEntity<ErroResponse> tratarEmailJaCadastrado(
+            EmailJaCadastradoException ex) {
+
+        ErroResponse erro = new ErroResponse(
+                409,
+                "Conflict",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(erro);
+    }
+
+    // ------------------------------------------------------------
     // ERRO DE VALIDAÇÃO - 400
-    // ============================================================
+    // ------------------------------------------------------------
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> tratarErroValidacao(
