@@ -1,14 +1,12 @@
 package com.botelho.loester.api_alunos.exception;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.botelho.loester.api_alunos.dto.response.ErroResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -18,14 +16,14 @@ public class GlobalExceptionHandler {
     // ------------------------------------------------------------
 
     @ExceptionHandler(RegistroNaoEncontradoException.class)
-    public ResponseEntity<ErroResponse> tratarRegistroNaoEncontrado(
+    public ResponseEntity<ErroResponse> handleRegistroNaoEncontradoException(
             RegistroNaoEncontradoException ex) {
 
         ErroResponse erro = new ErroResponse(
-                404,
-                "Not Found",
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                Instant.now()
         );
 
         return ResponseEntity
@@ -37,15 +35,15 @@ public class GlobalExceptionHandler {
     // E-MAIL JÁ CADASTRADO - 409
     // ------------------------------------------------------------
 
-    @ExceptionHandler(EmailJaCadastradoException.class)
-    public ResponseEntity<ErroResponse> tratarEmailJaCadastrado(
-            EmailJaCadastradoException ex) {
+    @ExceptionHandler(EmailCadastradoException.class)
+    public ResponseEntity<ErroResponse> handleEmailCadastradoException(
+            EmailCadastradoException ex) {
 
         ErroResponse erro = new ErroResponse(
-                409,
-                "Conflict",
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
                 ex.getMessage(),
-                LocalDateTime.now()
+                Instant.now()
         );
 
         return ResponseEntity
@@ -58,7 +56,7 @@ public class GlobalExceptionHandler {
     // ------------------------------------------------------------
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErroResponse> tratarErroValidacao(
+    public ResponseEntity<ErroResponse> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex) {
 
         String mensagem = ex
@@ -72,10 +70,10 @@ public class GlobalExceptionHandler {
                 .orElse("Erro de validação");
 
         ErroResponse erro = new ErroResponse(
-                400,
-                "Bad Request",
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 mensagem,
-                LocalDateTime.now()
+                Instant.now()
         );
 
         return ResponseEntity

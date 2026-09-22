@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.botelho.loester.api_alunos.dto.request.AlteraSenhaRequest;
 import com.botelho.loester.api_alunos.dto.request.AlunoRequest;
 import com.botelho.loester.api_alunos.dto.response.AlunoResponse;
-import com.botelho.loester.api_alunos.exception.EmailJaCadastradoException;
+import com.botelho.loester.api_alunos.exception.EmailCadastradoException;
 import com.botelho.loester.api_alunos.exception.RegistroNaoEncontradoException;
 import com.botelho.loester.api_alunos.mapper.AlunoMapper;
 import com.botelho.loester.api_alunos.model.Aluno;
@@ -17,12 +19,14 @@ import com.botelho.loester.api_alunos.model.Aluno;
 @Service
 public class AlunoService {
 
+    private static final Logger log =
+            LoggerFactory.getLogger(AlunoService.class);
+
     private final AlunoMapper mapper;
 
     private final List<Aluno> lista = new ArrayList<>();
 
     public AlunoService(AlunoMapper mapper) {
-
         this.mapper = mapper;
 
         Aluno aluno1 = new Aluno(
@@ -91,27 +95,38 @@ public class AlunoService {
         lista.add(aluno1);
         lista.add(aluno2);
         lista.add(aluno3);
+
+        log.info("Alunos iniciais carregados. Quantidade: {}", lista.size());
     }
 
     public List<AlunoResponse> listarTodos() {
+
+        log.info("Listando todos os alunos. Quantidade: {}", lista.size());
 
         return mapper.toResponseList(lista);
     }
 
     public AlunoResponse obterPorId(Integer id) {
 
+        log.info("Buscando aluno pelo ID: {}", id);
+
         return lista.stream()
                 .filter(aluno -> aluno.getId().equals(id))
                 .findFirst()
                 .map(mapper::toResponse)
-                .orElseThrow(() ->
-                        new RegistroNaoEncontradoException(
-                                "Aluno não encontrado. Id: " + id
-                        )
-                );
+                .orElseThrow(() -> {
+                    log.warn("Aluno não encontrado. ID: {}", id);
+
+                    return new RegistroNaoEncontradoException(
+                            "Aluno não encontrado. Id: " + id
+                    );
+                });
     }
 
     public AlunoResponse incluir(AlunoRequest request) {
+
+        log.info("Iniciando inclusão de aluno. E-mail: {}",
+                request.email());
 
         validarEmailParaInclusao(request.email());
 
@@ -143,10 +158,14 @@ public class AlunoService {
 
         lista.add(aluno);
 
+        log.info("Aluno incluído com sucesso. ID: {}", novoId);
+
         return mapper.toResponse(aluno);
     }
 
     public AlunoResponse atualizar(Integer id, AlunoRequest request) {
+
+        log.info("Iniciando atualização do aluno. ID: {}", id);
 
         Aluno aluno = buscarAluno(id);
 
@@ -169,21 +188,31 @@ public class AlunoService {
         aluno.setObservacao(request.observacao());
         aluno.setAtivo(request.ativo());
 
+        log.info("Aluno atualizado com sucesso. ID: {}", id);
+
         return mapper.toResponse(aluno);
     }
 
     public void deletar(Integer id) {
 
+        log.info("Iniciando exclusão do aluno. ID: {}", id);
+
         Aluno aluno = buscarAluno(id);
 
         lista.remove(aluno);
+
+        log.info("Aluno excluído com sucesso. ID: {}", id);
     }
 
     public void alterarSenha(Integer id, AlteraSenhaRequest request) {
 
+        log.info("Iniciando alteração de senha. ID: {}", id);
+
         Aluno aluno = buscarAluno(id);
 
         aluno.setSenha(request.novaSenha());
+
+        log.info("Senha alterada com sucesso. ID: {}", id);
     }
 
     private Aluno buscarAluno(Integer id) {
@@ -191,11 +220,13 @@ public class AlunoService {
         return lista.stream()
                 .filter(aluno -> aluno.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() ->
-                        new RegistroNaoEncontradoException(
-                                "Aluno não encontrado. Id: " + id
-                        )
-                );
+                .orElseThrow(() -> {
+                    log.warn("Aluno não encontrado durante a busca. ID: {}", id);
+
+                    return new RegistroNaoEncontradoException(
+                            "Aluno não encontrado. Id: " + id
+                    );
+                });
     }
 
     private void validarEmailParaInclusao(String email) {
@@ -207,7 +238,10 @@ public class AlunoService {
 
         if (emailExiste) {
 
-            throw new EmailJaCadastradoException(
+            log.warn("Tentativa de cadastro com e-mail já existente: {}",
+                    email);
+
+            throw new EmailCadastradoException(
                     "E-mail já cadastrado: " + email
             );
         }
@@ -225,7 +259,13 @@ public class AlunoService {
 
         if (emailExiste) {
 
-            throw new EmailJaCadastradoException(
+            log.warn(
+                    "Tentativa de atualização com e-mail já cadastrado. ID: {}, E-mail: {}",
+                    idAluno,
+                    email
+            );
+
+            throw new EmailCadastradoException(
                     "E-mail já cadastrado para outro aluno: " + email
             );
         }

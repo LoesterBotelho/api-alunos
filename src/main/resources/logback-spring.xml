@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <!-- Console do Eclipse -->
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+
+    </appender>
+
+    <!-- Envia logs para o rsyslog -->
+    <appender name="SYSLOG"
+              class="ch.qos.logback.classic.net.SyslogAppender">
+
+        <syslogHost>localhost</syslogHost>
+        <port>514</port>
+
+        <facility>DAEMON</facility>
+
+        <suffixPattern>
+            [%thread] %logger{36} - %msg
+        </suffixPattern>
+
+    </appender>
+
+    <!-- Logs da aplicação -->
+    <logger name="com.botelho.loester.api_alunos"
+            level="DEBUG"
+            additivity="false">
+
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="SYSLOG"/>
+
+    </logger>
+
+    <!-- Logs gerais -->
+    <root level="INFO">
+
+        <appender-ref ref="CONSOLE"/>
+
+    </root>
+
+</configuration>

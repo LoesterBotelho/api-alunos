@@ -1,9 +1,79 @@
 version: '3.8'
 
 services:
+
+  rsyslog:
+    image: loesterbotelho/rsyslog:1.0.0
+    container_name: rsyslog-server
+
+    ports:
+      - "514:514/tcp"
+      - "514:514/udp"
+
+    volumes:
+      - ./logs:/logs
+
+    networks:
+      - api-alunos-network
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep rsyslogd > /dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+
+  apache:
+    image: loesterbotelho/apache-logs:1.0.0
+    container_name: apache-logs
+
+    ports:
+      - "8081:80"
+
+    volumes:
+      # Mesma pasta ./logs usada pelo rsyslog
+      - ./logs:/usr/local/apache2/htdocs:ro
+
+    networks:
+      - api-alunos-network
+
+    depends_on:
+      rsyslog:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+
   api-alunos:
     image: loesterbotelho/api-alunos:1.0.0
     container_name: api-alunos-container
+
     ports:
       - "8080:8080"
+
     restart: unless-stopped
+
+    networks:
+      - api-alunos-network
+
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://host.docker.internal:514"
+        syslog-facility: daemon
+        tag: "api-alunos"
+
+
+networks:
+  api-alunos-network:
+    driver: bridge
