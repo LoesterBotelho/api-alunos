@@ -1,6 +1,7 @@
 package com.botelho.loester.api_alunos.exception;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,14 +10,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+class GlobalExceptionHandler {
 
     // ------------------------------------------------------------
     // REGISTRO NÃO ENCONTRADO - 404
     // ------------------------------------------------------------
 
     @ExceptionHandler(RegistroNaoEncontradoException.class)
-    public ResponseEntity<ErroResponse> handleRegistroNaoEncontradoException(
+    ResponseEntity<ErroResponse> handleRegistroNaoEncontradoException(
             RegistroNaoEncontradoException ex) {
 
         ErroResponse erro = new ErroResponse(
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler {
     // ------------------------------------------------------------
 
     @ExceptionHandler(EmailCadastradoException.class)
-    public ResponseEntity<ErroResponse> handleEmailCadastradoException(
+    ResponseEntity<ErroResponse> handleEmailCadastradoException(
             EmailCadastradoException ex) {
 
         ErroResponse erro = new ErroResponse(
@@ -56,24 +57,24 @@ public class GlobalExceptionHandler {
     // ------------------------------------------------------------
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErroResponse> handleMethodArgumentNotValidException(
+    ResponseEntity<ErroAtributoResponse> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex) {
 
-        String mensagem = ex
+        List<ErroAtributo> erros = ex
                 .getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(erro -> erro.getField()
-                        + ": "
-                        + erro.getDefaultMessage())
-                .findFirst()
-                .orElse("Erro de validação");
+                .map(erro -> new ErroAtributo(
+                        erro.getField(),
+                        erro.getDefaultMessage()
+                ))
+                .toList();
 
-        ErroResponse erro = new ErroResponse(
+        ErroAtributoResponse erro = new ErroAtributoResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                mensagem,
-                Instant.now()
+                "Erro de validação",
+                Instant.now(),
+                erros
         );
 
         return ResponseEntity

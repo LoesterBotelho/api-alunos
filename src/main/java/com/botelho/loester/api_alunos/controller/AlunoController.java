@@ -26,23 +26,23 @@ import jakarta.validation.Valid;
 @RequestMapping("/alunos")
 public class AlunoController {
 
-	private final AlunoService alunoService;
+    private final AlunoService alunoService;
 
-	@Autowired
-	public AlunoController(AlunoService alunoService) {
-		this.alunoService = alunoService;
-	}
-	
-	@GetMapping
-	public List<AlunoResponse> listarTodos() {
-		return alunoService.listarTodos();
-	}	
-	
-	@GetMapping("/{id}")
-	public AlunoResponse obterPorId(@PathVariable Integer id) {
-		return alunoService.obterPorId(id);
-	}		
-	
+    @Autowired
+    public AlunoController(AlunoService alunoService) {
+        this.alunoService = alunoService;
+    }
+
+    @GetMapping
+    public List<AlunoResponse> listarTodos() {
+        return alunoService.listarTodos();
+    }
+
+    @GetMapping("/{id}")
+    public AlunoResponse obterPorId(@PathVariable Integer id) {
+        return alunoService.obterPorId(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AlunoResponse incluir(@Valid @RequestBody AlunoRequest request) {
@@ -52,8 +52,7 @@ public class AlunoController {
     @PutMapping("/{id}")
     public AlunoResponse atualizar(
             @PathVariable Integer id,
-            @Valid
-            @RequestBody AlunoRequest request) {
+            @Valid @RequestBody AlunoRequest request) {
 
         return alunoService.atualizar(id, request);
     }
@@ -68,10 +67,8 @@ public class AlunoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void alterarSenha(
             @PathVariable Integer id,
-            @RequestBody AlteraSenhaRequest request) {
+            @Valid @RequestBody AlteraSenhaRequest request) {
 
         alunoService.alterarSenha(id, request);
     }
-
-    
 }

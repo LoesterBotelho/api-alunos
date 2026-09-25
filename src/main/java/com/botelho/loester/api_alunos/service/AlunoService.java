@@ -19,11 +19,9 @@ import com.botelho.loester.api_alunos.model.Aluno;
 @Service
 public class AlunoService {
 
-    private static final Logger log =
-            LoggerFactory.getLogger(AlunoService.class);
+    private static final Logger log = LoggerFactory.getLogger(AlunoService.class);
 
     private final AlunoMapper mapper;
-
     private final List<Aluno> lista = new ArrayList<>();
 
     public AlunoService(AlunoMapper mapper) {
@@ -100,14 +98,11 @@ public class AlunoService {
     }
 
     public List<AlunoResponse> listarTodos() {
-
         log.info("Listando todos os alunos. Quantidade: {}", lista.size());
-
         return mapper.toResponseList(lista);
     }
 
     public AlunoResponse obterPorId(Integer id) {
-
         log.info("Buscando aluno pelo ID: {}", id);
 
         return lista.stream()
@@ -116,17 +111,12 @@ public class AlunoService {
                 .map(mapper::toResponse)
                 .orElseThrow(() -> {
                     log.warn("Aluno não encontrado. ID: {}", id);
-
-                    return new RegistroNaoEncontradoException(
-                            "Aluno não encontrado. Id: " + id
-                    );
+                    return new RegistroNaoEncontradoException("Aluno não encontrado. Id: " + id);
                 });
     }
 
     public AlunoResponse incluir(AlunoRequest request) {
-
-        log.info("Iniciando inclusão de aluno. E-mail: {}",
-                request.email());
+        log.info("Iniciando inclusão de aluno. E-mail: {}", request.email());
 
         validarEmailParaInclusao(request.email());
 
@@ -164,7 +154,6 @@ public class AlunoService {
     }
 
     public AlunoResponse atualizar(Integer id, AlunoRequest request) {
-
         log.info("Iniciando atualização do aluno. ID: {}", id);
 
         Aluno aluno = buscarAluno(id);
@@ -194,7 +183,6 @@ public class AlunoService {
     }
 
     public void deletar(Integer id) {
-
         log.info("Iniciando exclusão do aluno. ID: {}", id);
 
         Aluno aluno = buscarAluno(id);
@@ -205,7 +193,6 @@ public class AlunoService {
     }
 
     public void alterarSenha(Integer id, AlteraSenhaRequest request) {
-
         log.info("Iniciando alteração de senha. ID: {}", id);
 
         Aluno aluno = buscarAluno(id);
@@ -216,58 +203,32 @@ public class AlunoService {
     }
 
     private Aluno buscarAluno(Integer id) {
-
         return lista.stream()
                 .filter(aluno -> aluno.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> {
                     log.warn("Aluno não encontrado durante a busca. ID: {}", id);
-
-                    return new RegistroNaoEncontradoException(
-                            "Aluno não encontrado. Id: " + id
-                    );
+                    return new RegistroNaoEncontradoException("Aluno não encontrado. Id: " + id);
                 });
     }
 
     private void validarEmailParaInclusao(String email) {
-
         boolean emailExiste = lista.stream()
-                .anyMatch(aluno ->
-                        aluno.getEmail().equalsIgnoreCase(email)
-                );
+                .anyMatch(aluno -> aluno.getEmail().equalsIgnoreCase(email));
 
         if (emailExiste) {
-
-            log.warn("Tentativa de cadastro com e-mail já existente: {}",
-                    email);
-
-            throw new EmailCadastradoException(
-                    "E-mail já cadastrado: " + email
-            );
+            log.warn("Tentativa de cadastro com e-mail já existente: {}", email);
+            throw new EmailCadastradoException("E-mail já cadastrado: " + email);
         }
     }
 
-    private void validarEmailParaAtualizacao(
-            String email,
-            Integer idAluno) {
-
+    private void validarEmailParaAtualizacao(String email, Integer idAluno) {
         boolean emailExiste = lista.stream()
-                .anyMatch(aluno ->
-                        aluno.getEmail().equalsIgnoreCase(email)
-                        && !aluno.getId().equals(idAluno)
-                );
+                .anyMatch(aluno -> aluno.getEmail().equalsIgnoreCase(email) && !aluno.getId().equals(idAluno));
 
         if (emailExiste) {
-
-            log.warn(
-                    "Tentativa de atualização com e-mail já cadastrado. ID: {}, E-mail: {}",
-                    idAluno,
-                    email
-            );
-
-            throw new EmailCadastradoException(
-                    "E-mail já cadastrado para outro aluno: " + email
-            );
+            log.warn("Tentativa de atualização com e-mail já cadastrado. ID: {}, E-mail: {}", idAluno, email);
+            throw new EmailCadastradoException("E-mail já cadastrado para outro aluno: " + email);
         }
     }
 }

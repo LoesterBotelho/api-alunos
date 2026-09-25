@@ -27,21 +27,17 @@ import com.botelho.loester.api_alunos.model.Aluno;
 class AlunoServiceTest {
 
     private AlunoService alunoService;
-
     private AlunoMapper alunoMapper;
 
     @BeforeEach
     void setUp() {
-
         alunoMapper = mock(AlunoMapper.class);
-
         alunoService = new AlunoService(alunoMapper);
 
         configurarMapper();
     }
 
     private void configurarMapper() {
-
         AlunoResponse loester = new AlunoResponse(
                 1,
                 "Loester Botelho",
@@ -67,19 +63,11 @@ class AlunoServiceTest {
         );
 
         when(alunoMapper.toResponseList(anyList()))
-                .thenReturn(
-                        List.of(
-                                loester,
-                                henrique,
-                                terceiro
-                        )
-                );
+                .thenReturn(List.of(loester, henrique, terceiro));
 
         when(alunoMapper.toResponse(any(Aluno.class)))
                 .thenAnswer(invocation -> {
-
                     Aluno aluno = invocation.getArgument(0);
-
                     return new AlunoResponse(
                             aluno.getId(),
                             aluno.getNome(),
@@ -91,7 +79,6 @@ class AlunoServiceTest {
     }
 
     private AlunoRequest alunoRequestValido() {
-
         return new AlunoRequest(
                 "Carlos Silva",
                 "carlos.silva@empresa.com",
@@ -116,102 +103,54 @@ class AlunoServiceTest {
     @Test
     @DisplayName("Deve listar todos os alunos cadastrados inicialmente")
     void deveListarTodosOsAlunos() {
-
-        List<AlunoResponse> listaAlunos =
-                alunoService.listarTodos();
+        List<AlunoResponse> listaAlunos = alunoService.listarTodos();
 
         assertNotNull(listaAlunos);
-
-        assertEquals(
-                3,
-                listaAlunos.size()
-        );
-
-        assertEquals(
-                "Loester Botelho",
-                listaAlunos.get(0).nome()
-        );
+        assertEquals(3, listaAlunos.size());
+        assertEquals("Loester Botelho", listaAlunos.get(0).nome());
     }
 
     @Test
     @DisplayName("Deve retornar o aluno correspondente ao ID informado")
     void deveListarAlunoPorId() {
-
-        AlunoResponse aluno =
-                alunoService.obterPorId(1);
+        AlunoResponse aluno = alunoService.obterPorId(1);
 
         assertNotNull(aluno);
-
-        assertEquals(
-                1,
-                aluno.id()
-        );
-
-        assertEquals(
-                "Loester Botelho",
-                aluno.nome()
-        );
+        assertEquals(1, aluno.id());
+        assertEquals("Loester Botelho", aluno.nome());
     }
 
     @Test
     @DisplayName("Deve lançar exceção quando o ID do aluno não for encontrado")
     void deveLancarExcecaoQuandoAlunoNaoEncontradoPorId() {
-
         Integer idInexistente = 99;
 
-        RegistroNaoEncontradoException exception =
-                assertThrows(
-                        RegistroNaoEncontradoException.class,
-                        () -> alunoService.obterPorId(idInexistente)
-                );
-
-        assertEquals(
-                "Aluno não encontrado. Id: " + idInexistente,
-                exception.getMessage()
+        RegistroNaoEncontradoException exception = assertThrows(
+                RegistroNaoEncontradoException.class,
+                () -> alunoService.obterPorId(idInexistente)
         );
+
+        assertEquals("Aluno não encontrado. Id: " + idInexistente, exception.getMessage());
     }
 
     @Test
     @DisplayName("Deve incluir um novo aluno com sucesso e incrementar o ID")
     void deveIncluirNovoAluno() {
-
         AlunoRequest request = alunoRequestValido();
 
-        AlunoResponse response =
-                alunoService.incluir(request);
+        AlunoResponse response = alunoService.incluir(request);
 
         assertNotNull(response);
-
-        assertEquals(
-                4,
-                response.id()
-        );
-
-        assertEquals(
-                "Carlos Silva",
-                response.nome()
-        );
-
-        assertEquals(
-                "carlos.silva@empresa.com",
-                response.email()
-        );
-
-        assertEquals(
-                LocalDate.of(1995, 5, 20),
-                response.dataNascimento()
-        );
-
-        assertEquals(
-                9.5,
-                response.media()
-        );
+        assertEquals(4, response.id());
+        assertEquals("Carlos Silva", response.nome());
+        assertEquals("carlos.silva@empresa.com", response.email());
+        assertEquals(LocalDate.of(1995, 5, 20), response.dataNascimento());
+        assertEquals(9.5, response.media());
     }
 
     @Test
     @DisplayName("Deve atualizar os dados do aluno com sucesso")
     void deveAtualizarAluno() {
-
         AlunoRequest request = new AlunoRequest(
                 "Loester Atualizado",
                 "loester.novo@empresa.com",
@@ -232,76 +171,38 @@ class AlunoServiceTest {
                 true
         );
 
-        AlunoResponse response =
-                alunoService.atualizar(
-                        1,
-                        request
-                );
+        AlunoResponse response = alunoService.atualizar(1, request);
 
         assertNotNull(response);
-
-        assertEquals(
-                1,
-                response.id()
-        );
-
-        assertEquals(
-                "Loester Atualizado",
-                response.nome()
-        );
-
-        assertEquals(
-                "loester.novo@empresa.com",
-                response.email()
-        );
-
-        assertEquals(
-                LocalDate.of(1990, 9, 11),
-                response.dataNascimento()
-        );
-
-        assertEquals(
-                10.0,
-                response.media()
-        );
+        assertEquals(1, response.id());
+        assertEquals("Loester Atualizado", response.nome());
+        assertEquals("loester.novo@empresa.com", response.email());
+        assertEquals(LocalDate.of(1990, 9, 11), response.dataNascimento());
+        assertEquals(10.0, response.media());
     }
 
     @Test
     @DisplayName("Deve alterar a senha do aluno com sucesso")
     void deveAlterarSenha() {
+        AlteraSenhaRequest request = new AlteraSenhaRequest("NovaSenhaSuperSegura!#");
 
-        AlteraSenhaRequest request =
-                new AlteraSenhaRequest(
-                        "NovaSenhaSuperSegura!#"
-                );
-
-        assertDoesNotThrow(
-                () -> alunoService.alterarSenha(
-                        1,
-                        request
-                )
-        );
+        assertDoesNotThrow(() -> alunoService.alterarSenha(1, request));
     }
 
     @Test
     @DisplayName("Deve lançar exceção ao tentar atualizar aluno inexistente")
     void deveLancarExcecaoAoAtualizarAlunoInexistente() {
-
         AlunoRequest request = alunoRequestValido();
 
         assertThrows(
                 RegistroNaoEncontradoException.class,
-                () -> alunoService.atualizar(
-                        99,
-                        request
-                )
+                () -> alunoService.atualizar(99, request)
         );
     }
 
     @Test
     @DisplayName("Deve deletar o aluno com sucesso quando o ID existir")
     void deveDeletarAluno() {
-
         alunoService.deletar(3);
 
         assertThrows(
@@ -313,7 +214,6 @@ class AlunoServiceTest {
     @Test
     @DisplayName("Deve lançar exceção ao tentar deletar aluno inexistente")
     void deveLancarExcecaoAoDeletarAlunoInexistente() {
-
         assertThrows(
                 RegistroNaoEncontradoException.class,
                 () -> alunoService.deletar(99)
@@ -323,72 +223,28 @@ class AlunoServiceTest {
     @Test
     @DisplayName("Deve incluir aluno com todos os novos campos")
     void deveIncluirAlunoComTodosOsCampos() {
-
         AlunoRequest request = alunoRequestValido();
 
-        AlunoResponse response =
-                alunoService.incluir(request);
+        AlunoResponse response = alunoService.incluir(request);
 
         assertNotNull(response);
-
-        assertEquals(
-                4,
-                response.id()
-        );
-
-        assertEquals(
-                "Carlos Silva",
-                response.nome()
-        );
-
-        assertEquals(
-                "carlos.silva@empresa.com",
-                response.email()
-        );
-
-        assertEquals(
-                9.5,
-                response.media()
-        );
+        assertEquals(4, response.id());
+        assertEquals("Carlos Silva", response.nome());
+        assertEquals("carlos.silva@empresa.com", response.email());
+        assertEquals(9.5, response.media());
     }
 
     @Test
     @DisplayName("Deve atualizar todos os novos campos do aluno")
     void deveAtualizarTodosOsCamposDoAluno() {
-
         AlunoRequest request = alunoRequestValido();
 
-        AlunoResponse response =
-                alunoService.atualizar(
-                        1,
-                        request
-                );
+        AlunoResponse response = alunoService.atualizar(1, request);
 
         assertNotNull(response);
-
-        assertEquals(
-                1,
-                response.id()
-        );
-
-        assertEquals(
-                "Carlos Silva",
-                response.nome()
-        );
-
-        assertEquals(
-                "carlos.silva@empresa.com",
-                response.email()
-        );
-
-        assertEquals(
-                LocalDate.of(1995, 5, 20),
-                response.dataNascimento()
-        );
-
-        assertEquals(
-                9.5,
-                response.media()
-        );
+        assertEquals(1, response.id());
+        assertEquals("Carlos Silva", response.nome());
+        assertEquals("carlos.silva@empresa.com", response.email());
+        assertEquals(9.5, response.media());
     }
 }

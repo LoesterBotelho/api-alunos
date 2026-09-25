@@ -141,7 +141,7 @@
               "",
               "pm.test(\"Error contains expected message\", function () {",
               "    const json = pm.response.json();",
-              "    pm.expect(json.mensagem).to.include(\"Aluno não encontrado\");",
+              "    pm.expect(json.message).to.include(\"Aluno não encontrado\");",
               "});"
             ]
           }
@@ -407,7 +407,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -416,7 +424,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });",
-                  "pm.test(\"Validation refers to nome\", function () { pm.expect(pm.response.json().mensagem).to.include(\"nome\"); });"
+                  "pm.test(\"Validation refers to nome\", function () {",
+                  "    const json = pm.response.json();",
+                  "    const contemErro = json.errosAtributos && json.errosAtributos.some(e => e.atributo === 'nome');",
+                  "    pm.expect(contemErro).to.be.true;",
+                  "});"
                 ]
               }
             }
@@ -436,7 +448,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"   \",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -464,7 +484,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"ABCDEFGHIJKLMNOPQRSTUVWXYZ ABCDEFGHIJKLMNOPQRSTUVWXYZ\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -492,7 +520,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -520,7 +556,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"email-invalido\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -548,7 +592,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -576,7 +628,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": null,\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -604,7 +664,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"2030-01-01\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -632,7 +700,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": null,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -660,7 +736,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": -1,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -688,7 +772,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 11,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -716,7 +808,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"12345678909\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -744,7 +844,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"47999999999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -772,7 +880,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -800,7 +916,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 121,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -828,7 +952,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 0.40,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -856,7 +988,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 501,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -884,7 +1024,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 21,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -912,7 +1060,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2030-01-01\",\n  \"dataConclusao\": \"2031-01-01\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -940,7 +1096,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2020-01-01\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -968,7 +1132,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": true\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
@@ -996,7 +1168,15 @@
               "mode": "raw",
               "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@empresa.com\",\n  \"senha\": \"Senha@123\",\n  \"dataNascimento\": \"1995-05-20\",\n  \"media\": 9.5,\n  \"cpf\": \"123.456.789-09\",\n  \"telefone\": \"(47) 99999-9999\",\n  \"cep\": \"89120-000\",\n  \"idade\": 31,\n  \"altura\": 1.65,\n  \"peso\": 65.5,\n  \"quantidadeDependentes\": 2,\n  \"dataMatricula\": \"2026-09-14\",\n  \"dataConclusao\": \"2028-12-20\",\n  \"site\": \"https://www.exemplo.com\",\n  \"observacao\": \"Teste\",\n  \"ativo\": null\n}"
             },
-            "url": "{{baseUrl}}/alunos"
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
           },
           "event": [
             {
