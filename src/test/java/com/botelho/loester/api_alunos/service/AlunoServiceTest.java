@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,11 +20,12 @@ import org.junit.jupiter.api.Test;
 import com.botelho.loester.api_alunos.dto.request.AlteraSenhaRequest;
 import com.botelho.loester.api_alunos.dto.request.AlunoRequest;
 import com.botelho.loester.api_alunos.dto.response.AlunoResponse;
+import com.botelho.loester.api_alunos.exception.EmailCadastradoException;
 import com.botelho.loester.api_alunos.exception.RegistroNaoEncontradoException;
 import com.botelho.loester.api_alunos.mapper.AlunoMapper;
 import com.botelho.loester.api_alunos.model.Aluno;
 
-@DisplayName("Testes Unitários para AlunoService")
+@DisplayName("Testes unitários do AlunoService")
 class AlunoServiceTest {
 
     private AlunoService alunoService;
@@ -68,6 +70,7 @@ class AlunoServiceTest {
         when(alunoMapper.toResponse(any(Aluno.class)))
                 .thenAnswer(invocation -> {
                     Aluno aluno = invocation.getArgument(0);
+
                     return new AlunoResponse(
                             aluno.getId(),
                             aluno.getNome(),
@@ -101,10 +104,67 @@ class AlunoServiceTest {
     }
 
     @Test
+    @DisplayName("Deve cadastrar um aluno quando os dados forem válidos")
+    void deveCadastrarAlunoQuandoDadosForemValidos() {
+        // Arrange
+        AlunoRequest request = alunoRequestValido();
+
+        // Act
+        AlunoResponse response = alunoService.incluir(request);
+
+        // Assert
+        Assertions.assertThat(response)
+                .isNotNull();
+
+        Assertions.assertThat(response.id())
+                .isGreaterThan(0);
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao cadastrar dois alunos com o mesmo e-mail")
+    void deveLancarExcecaoAoCadastrarDoisAlunosComMesmoEmail() {
+        // Arrange
+        AlunoRequest primeiroAluno = alunoRequestValido();
+
+        AlunoRequest segundoAluno = new AlunoRequest(
+                "Outro Aluno",
+                primeiroAluno.email(),
+                "OutraSenha@123",
+                LocalDate.of(1998, 4, 10),
+                8.0,
+                "987.654.321-00",
+                "(47) 98888-8888",
+                "89120-001",
+                28,
+                1.80,
+                75.0,
+                1,
+                LocalDate.now(),
+                LocalDate.now().plusYears(2),
+                "https://www.outroaluno.com",
+                "Teste de e-mail duplicado.",
+                true
+        );
+
+        // Act
+        AlunoResponse response = alunoService.incluir(primeiroAluno);
+
+        // Assert
+        Assertions.assertThat(response)
+                .isNotNull();
+
+        Assertions.assertThatThrownBy(
+                () -> alunoService.incluir(segundoAluno)
+        ).isInstanceOf(EmailCadastradoException.class);
+    }
+
+    @Test
     @DisplayName("Deve listar todos os alunos cadastrados inicialmente")
     void deveListarTodosOsAlunos() {
+        // Act
         List<AlunoResponse> listaAlunos = alunoService.listarTodos();
 
+        // Assert
         assertNotNull(listaAlunos);
         assertEquals(3, listaAlunos.size());
         assertEquals("Loester Botelho", listaAlunos.get(0).nome());
@@ -113,33 +173,44 @@ class AlunoServiceTest {
     @Test
     @DisplayName("Deve retornar o aluno correspondente ao ID informado")
     void deveListarAlunoPorId() {
+        // Act
         AlunoResponse aluno = alunoService.obterPorId(1);
 
+        // Assert
         assertNotNull(aluno);
         assertEquals(1, aluno.id());
         assertEquals("Loester Botelho", aluno.nome());
     }
 
     @Test
-    @DisplayName("Deve lançar exceção quando o ID do aluno não for encontrado")
+    @DisplayName("Deve lançar exceção quando o aluno não for encontrado pelo ID")
     void deveLancarExcecaoQuandoAlunoNaoEncontradoPorId() {
+        // Arrange
         Integer idInexistente = 99;
 
+        // Act
         RegistroNaoEncontradoException exception = assertThrows(
                 RegistroNaoEncontradoException.class,
                 () -> alunoService.obterPorId(idInexistente)
         );
 
-        assertEquals("Aluno não encontrado. Id: " + idInexistente, exception.getMessage());
+        // Assert
+        assertEquals(
+                "Aluno não encontrado. Id: " + idInexistente,
+                exception.getMessage()
+        );
     }
 
     @Test
     @DisplayName("Deve incluir um novo aluno com sucesso e incrementar o ID")
     void deveIncluirNovoAluno() {
+        // Arrange
         AlunoRequest request = alunoRequestValido();
 
+        // Act
         AlunoResponse response = alunoService.incluir(request);
 
+        // Assert
         assertNotNull(response);
         assertEquals(4, response.id());
         assertEquals("Carlos Silva", response.nome());
@@ -151,6 +222,7 @@ class AlunoServiceTest {
     @Test
     @DisplayName("Deve atualizar os dados do aluno com sucesso")
     void deveAtualizarAluno() {
+        // Arrange
         AlunoRequest request = new AlunoRequest(
                 "Loester Atualizado",
                 "loester.novo@empresa.com",
@@ -171,8 +243,10 @@ class AlunoServiceTest {
                 true
         );
 
+        // Act
         AlunoResponse response = alunoService.atualizar(1, request);
 
+        // Assert
         assertNotNull(response);
         assertEquals(1, response.id());
         assertEquals("Loester Atualizado", response.nome());
@@ -182,18 +256,25 @@ class AlunoServiceTest {
     }
 
     @Test
-    @DisplayName("Deve alterar a senha do aluno com sucesso")
+    @DisplayName("Deve alterar a senha do aluno sem lançar exceção")
     void deveAlterarSenha() {
-        AlteraSenhaRequest request = new AlteraSenhaRequest("NovaSenhaSuperSegura!#");
+        // Arrange
+        AlteraSenhaRequest request =
+                new AlteraSenhaRequest("NovaSenhaSuperSegura!#");
 
-        assertDoesNotThrow(() -> alunoService.alterarSenha(1, request));
+        // Act e Assert
+        assertDoesNotThrow(
+                () -> alunoService.alterarSenha(1, request)
+        );
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao tentar atualizar aluno inexistente")
+    @DisplayName("Deve lançar exceção ao tentar atualizar um aluno inexistente")
     void deveLancarExcecaoAoAtualizarAlunoInexistente() {
+        // Arrange
         AlunoRequest request = alunoRequestValido();
 
+        // Act e Assert
         assertThrows(
                 RegistroNaoEncontradoException.class,
                 () -> alunoService.atualizar(99, request)
@@ -203,8 +284,10 @@ class AlunoServiceTest {
     @Test
     @DisplayName("Deve deletar o aluno com sucesso quando o ID existir")
     void deveDeletarAluno() {
+        // Act
         alunoService.deletar(3);
 
+        // Assert
         assertThrows(
                 RegistroNaoEncontradoException.class,
                 () -> alunoService.obterPorId(3)
@@ -212,8 +295,9 @@ class AlunoServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao tentar deletar aluno inexistente")
+    @DisplayName("Deve lançar exceção ao tentar deletar um aluno inexistente")
     void deveLancarExcecaoAoDeletarAlunoInexistente() {
+        // Act e Assert
         assertThrows(
                 RegistroNaoEncontradoException.class,
                 () -> alunoService.deletar(99)
@@ -221,12 +305,15 @@ class AlunoServiceTest {
     }
 
     @Test
-    @DisplayName("Deve incluir aluno com todos os novos campos")
+    @DisplayName("Deve incluir aluno com todos os campos preenchidos")
     void deveIncluirAlunoComTodosOsCampos() {
+        // Arrange
         AlunoRequest request = alunoRequestValido();
 
+        // Act
         AlunoResponse response = alunoService.incluir(request);
 
+        // Assert
         assertNotNull(response);
         assertEquals(4, response.id());
         assertEquals("Carlos Silva", response.nome());
@@ -235,12 +322,15 @@ class AlunoServiceTest {
     }
 
     @Test
-    @DisplayName("Deve atualizar todos os novos campos do aluno")
+    @DisplayName("Deve atualizar todos os campos do aluno")
     void deveAtualizarTodosOsCamposDoAluno() {
+        // Arrange
         AlunoRequest request = alunoRequestValido();
 
+        // Act
         AlunoResponse response = alunoService.atualizar(1, request);
 
+        // Assert
         assertNotNull(response);
         assertEquals(1, response.id());
         assertEquals("Carlos Silva", response.nome());
